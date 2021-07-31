@@ -90,17 +90,23 @@ keys = [
     Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-    Key([mod],"Tab", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
-
+    Key(["mod1"],"Tab", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
+	Key([], "Print", lazy.spawn("scrot '%Y-%m-%d-%s_screenshot_$wx$h.png' -e 'mv $f ~/Pictures/screenshots/'")),
 ]
-
-group_names = 'WWW DEV SYS GFX ETC VBX'.split()
+# Group name: key bind
+group_names = {
+	'WWW': 'Tab',
+	'DEV': 'a',
+	'SYS': 's',
+	'GFX': 'd',
+	'ETC': 'f',
+	'VBX': 'g'
+}
 groups = [Group(name, layout='column') for name in group_names]
-for i, name in enumerate(group_names):
-    indx = str(i + 1)
-    keys += [
-        Key([mod], indx, lazy.group[name].toscreen()),
-        Key([mod, 'shift'], indx, lazy.window.togroup(name))]
+for name in group_names:
+	keys += [
+		Key([mod], group_names[name], lazy.group[name].toscreen()),
+		Key([mod, 'shift'], group_names[name], lazy.window.togroup(name))]
 
 layout_theme = {"border_width": 6,
                 "margin": [0, 0, gapSize, gapSize],
@@ -120,9 +126,8 @@ layout_float = {"border_focus": "ab8b82",
                 "max_border_width": 6
                 }
 bar_config = {
-        "margin": gapSize,
-        "padding": 0
-        }
+        "margin": gapSize
+			}
 layouts = [
     layout.Columns(**layout_theme),
     layout.Max(**layout_theme),
@@ -204,6 +209,10 @@ screens = [
                     ),
 
                 widget.Spacer(),
+				widget.Systray(
+					icon_size = 16,
+					padding = 5 
+				),
                 widget.Cmus(
                     font = 'Ubuntu Bold',
                     fontsize = '14',
@@ -221,19 +230,19 @@ screens = [
                         format = '{main_temp}°{units_temperature} {weather_details}',
                         padding = 7
                         ),
-                widget.CheckUpdates(
-                        font = 'Ubuntu Bold',
-                        fontsize = 14,
-                        foreground = color['fg'],
-                        colour_have_updates = color['fg-light'],
-                        colour_no_updates = color['fg'],
-                        no_update_string = ('no updates'),
-                        update_interval = 1800,
-                        distro = "Arch",
-                        display_format = "{updates} Updates",
-                        mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(terminal + ' -e sudo pacman -Syu')},
-                        padding = 7
-                        ),
+                #widget.CheckUpdates(
+                #        font = 'Ubuntu Bold',
+                #        fontsize = 14,
+                #        foreground = color['fg'],
+                #        colour_have_updates = color['fg-light'],
+                #        colour_no_updates = color['fg'],
+                #        no_update_string = ('no updates'),
+                #        update_interval = 1800,
+                #        distro = "Arch",
+                #        display_format = "{updates} Updates",
+                #        mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(terminal + ' -e sudo pacman -Syu')},
+                #        padding = 7
+                #        ),
                 widget.BitcoinTicker(
                     font = 'Ubuntu Bold',
                     fontsize = 14,
