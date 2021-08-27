@@ -101,7 +101,7 @@ arch-chroot /mnt
 ##### Clone repository
 ```sh
 git clone https://github.com/UberVeng/arch-qtile
-cd arch-basic
+cd arch-qtile
 ```
 ##### Edit one of this files
 ```sh
