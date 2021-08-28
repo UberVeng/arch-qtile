@@ -31,7 +31,7 @@ from typing import List  # noqa: F401
 from itertools import cycle
 
 from libqtile import bar, layout, widget, hook
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, Match, Screen, KeyChord
 from libqtile.lazy import lazy
 
 mod = "mod4"
@@ -96,7 +96,20 @@ keys = [
 
     Key([mod], "z", lazy.to_screen(0), desc='Keyboard focus to monitor 1'),
     Key([mod], "x", lazy.to_screen(1), desc='Keyboard focus to monitor 2'),
+
+    #keyChords
+    KeyChord(["mod1"], "e", [
+        Key([], "v",
+            lazy.spawn("vieb"),
+            desc="Launch Vieb browser"
+            ),
+        Key([], "q",
+            lazy.spawn("qtox"),
+            desc="Launch qTox"
+            )
+        ]),
 ]
+
 # Group name: key bind
 group_names = {
 	'WWW': 'Tab',
@@ -205,6 +218,10 @@ screens = [
                     urgent_alert_method =  "text",
                     urgent_text = color['red'],
                     ),
+                widget.Sep(
+                    linewidth = 0,
+                    padding = 5,
+                    ),
                 widget.CurrentLayout(
                     font='Ubuntu Bold',
                     fontsize = 14,
@@ -227,6 +244,16 @@ screens = [
                     ),
 
                 widget.Spacer(),
+                
+                widget.Chord(
+                    chords_colors={
+                       'launch': (color['bg'], color['fg']),
+                    },
+                    font = 'Ubuntu Bold',
+                    fontsize = '14',
+                    name_transform=lambda name: name.upper(),
+                    max_chars = 10,
+                ),
 				widget.Systray(
 					icon_size = 16,
 					padding = 5 
@@ -283,15 +310,10 @@ screens = [
                     padding = 15,
                     
                     ),
-                widget.Chord(
-                    chords_colors={
-                       'launch': ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
+                
                 widget.Sep(
                     linewidth = 0,
-                    padding = 13,
+                    padding = 8,
                     ),
                 ], 40, **bar_config), right=bar.Gap(size=gapSize),),
     Screen(
@@ -320,6 +342,10 @@ screens = [
                     urgent_alert_method =  "text",
                     urgent_text = color['red'],
                     ),
+                widget.Sep(
+                    linewidth = 0,
+                    padding = 5,
+                    ),
                 widget.CurrentLayout(
                     font='Ubuntu Bold',
                     fontsize = 14,
@@ -342,37 +368,6 @@ screens = [
                     ),
 
                 widget.Spacer(),
-                widget.Cmus(
-                    font = 'Ubuntu Bold',
-                    fontsize = '14',
-                    foreground = color['fg-light'],
-                    noplay_color = color['fg'],
-                    play_color = color['fg-light'],
-                    padding = 7,
-                    max_chars = 25
-                    ),
-                #widget.CheckUpdates(
-                #        font = 'Ubuntu Bold',
-                #        fontsize = 14,
-                #        foreground = color['fg'],
-                #        colour_have_updates = color['fg-light'],
-                #        colour_no_updates = color['fg'],
-                #        no_update_string = ('no updates'),
-                #        update_interval = 1800,
-                #        distro = "Arch",
-                #        display_format = "{updates} Updates",
-                #        mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(terminal + ' -e sudo pacman -Syu')},
-                #        padding = 7
-                #        ),
-                widget.BitcoinTicker(
-                    font = 'Ubuntu Bold',
-                    fontsize = 14,
-                    foreground = color['fg-light'],
-                    update_interval = 20,
-                    currency = "USD",
-                    padding = 7,
-                    fmt = ('{}'),
-                    ),
                 widget.Sep(
                         linewidth = 0,
                         padding = 7
@@ -384,25 +379,14 @@ screens = [
                     foreground = color['fg'],
                     configured_keyboards = ['us', 'ru'],
                     padding = 15,
-                    
                     ),
-                widget.Chord(
-                    chords_colors={
-                       'launch': ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
                 widget.Sep(
                     linewidth = 0,
-                    padding = 13,
+                    padding = 8,
                     ),
                 ], 40, **bar_config), right=bar.Gap(size=gapSize),),
         ]
     
-def switch_screens(qtile):
-    i = qtile.screens.index(qitle.current_scren)
-    group = qtile.screens[i - 1].group
-    qtile.current_screen.set_group(group)
 
 # Drag floating layouts.
 mouse = [
