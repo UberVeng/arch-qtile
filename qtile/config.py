@@ -91,6 +91,7 @@ keys = [
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key(["mod1"],"Tab", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
 	Key([], "Print", lazy.spawn("scrot '%Y-%m-%d-%s_screenshot_$wx$h.png' -e 'mv $f ~/Pictures/screenshots/'")),
+	Key(["mod1"], "Print", lazy.spawn("scrot '%Y-%m-%d-%s_screenshot_$wx$h.png' -e 'mv $f ~/Pictures/screenshots/'")),
 
 
     Key([mod], "z", lazy.to_screen(0), desc='Keyboard focus to monitor 1'),
@@ -153,8 +154,8 @@ color = {'bg': '#7a635d',
         'fg': 'b8958c',
         'semi-light': 'e5d8b1',
         'fg-light': 'e3d4ad',
-        'fg-semi-dark': '66514e',
-        'fg-dark': '594744',
+        'fg-dark': '423431',
+        'bg-dark': '664f4f',
         'selected': 'dbca9f',
         'red': 'ff9978',
         'dark-red':'bb4f58',
@@ -186,9 +187,14 @@ screens = [
                     fontsize = 14,
                     active = color['fg'],
                     inactive = color['fg-dark'], 
+
+                    #current workspace on current screen
                     this_current_screen_border = color['fg-light'],
-                    other_current_screen_border = color['fg-semi-dark'],
+
+                    #current workspace on inactive screen
+                    other_current_screen_border = color['bg-dark'],
                     this_screen_border = color['dark-red'],
+                    other_screen_border = color['bg-dark'],
                     padding_x = 10,
                     padding_y = 15,
                     margin_y = 5,
@@ -301,8 +307,9 @@ screens = [
                     active = color['fg'],
                     inactive = color['fg-dark'],  
                     this_current_screen_border = color['fg-light'],
-                    other_current_screen_border = color['fg-semi-dark'],
+                    other_current_screen_border = color['bg-dark'],
                     this_screen_border = color['dark-red'],
+                    other_screen_border = color['bg-dark'],
                     padding_x = 10,
                     padding_y = 15,
                     margin_y = 5,
