@@ -89,7 +89,7 @@ keys = [
     Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-    Key(["mod1"],"Tab", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
+    Key(["mod4"],"Tab", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
 	Key([], "Print", lazy.spawn("scrot '%Y-%m-%d-%s_screenshot_$wx$h.png' -e 'mv $f ~/Pictures/screenshots/'")),
 	Key(["mod1"], "Print", lazy.spawn("scrot '%Y-%m-%d-%s_screenshot_$wx$h.png' -e 'mv $f ~/Pictures/screenshots/'")),
 
@@ -98,7 +98,7 @@ keys = [
     Key([mod], "x", lazy.to_screen(1), desc='Keyboard focus to monitor 2'),
 
     #keyChords
-    KeyChord(["mod1"], "e", [
+    KeyChord([mod], "e", [
         Key([], "v",
             lazy.spawn("vieb"),
             desc="Launch Vieb browser"
@@ -196,7 +196,7 @@ screens = [
                     padding = 8,
                     ),
                 widget.GroupBox(
-                    font = 'Ubuntu Bold',
+                    font='Ubuntu Bold',
                     fontsize = 14,
                     active = color['fg'],
                     inactive = color['fg-dark'], 
@@ -246,12 +246,8 @@ screens = [
                 widget.Spacer(),
                 
                 widget.Chord(
-                    chords_colors={
-                       'launch': (color['bg'], color['fg']),
-                    },
                     font = 'Ubuntu Bold',
                     fontsize = '14',
-                    name_transform=lambda name: name.upper(),
                     max_chars = 10,
                 ),
 				widget.Systray(
