@@ -1,27 +1,34 @@
 # Arch-qtile
 <img src="https://i.imgur.com/otd883Q.png">
 
-# Full installation guide
+# Full installation guide (UEFI)
+<details>
+	<summary>Method with full disk encryption</summary>
 ##### Check internet connection and update clock
 ```sh
 ping 8.8.8.8
 timedatectl set-ntp true
 ```
-##### Find the disk you want to partition
+##### Find the disk you want to partition (in this case it's ```sda```)
 ```sh
 fdisk -l
 ```
-##### Patition the disk \[+4G non encrypted/+8G ecnrypted]
-### First partition should be 'Linux swap / Solaris', second -  'Linux LVM' or 'Linux'
+##### Patition the disk 
+#r# First partition should be 'Linux EFI, second = 'Linux filesystem',  third -  'Linux LVM' or 'Linux filesysm' if you don't need lvm or encryption
 ```sh
 fdisk /dev/sda
 
->> o
+>> g
 
 >> n
 >>
 >>
->> +8G
+>> +300M
+
+>> n
+>>
+>>
+>> +1G
 
 >> n
 >>
@@ -30,41 +37,57 @@ fdisk /dev/sda
 
 >> t
 >> 1
->> 19
+>> 1
 
 >> t
->> 2
+>> 3
 >> 30
 
 >>p
 >> w
 ```
-***
-### 1) Method with encryption
-##### Encrypt partition
+##### set file systems for sda1 and sda2
 ```sh
-cryptsetup -y --use-random luksFormat /dev/sda2
+mkfs.fat -F32 /dev/sda1
+mkfs.ext2 /dev/sda2
+```
+
+### Encryption (skip this step if you don't need to encrypt your disk)
+##### Parameters defind by user:
+```crypt_disk``` - name for encrypted disk
+***
+```sh
+cryptsetup -y --use-random luksFormat /dev/sda3
 >> YES
 >> password
 >> password
-cryptsetup open --type luks /dev/sda2 crypt_name
-lsblk
-pvcreate /dev/mapper/crypt_name
-vgcreate crypt_vg_name /dev/mapper/crypt_name
-lvcreate -n swap -L 4G crypt_vg_name
-lvcreate -n root -l 100%FREE crypt_vg_name
-mkfs.ext4 /dev/crypt_vg_name/root
-mkswap /dev/crypt_vg_name/swap
-swapon /dev/crypt_vg_name/swap
-mount /dev/crypt_vg_name/root /mnt
+cryptsetup open --type luks /dev/sda2 crypt_disk
 ```
+##### Now you could see the name of the disk
+```sh
+lsblk
+```
+### Setting up LVM (skip this step if you don't need LVM and enctyption)
+##### Parameters defined by user:
+```vg``` - name for volume group
+```sh
+pvcreate /dev/mapper/crypt_disk
+vgcreate vg /dev/mapper/crypt_disk
+lvcreate -n swap -L 4G vg
+lvcreate -n root -l 100%FREE vg
+mkfs.ext4 /dev/vg/root
+mkswap /dev/vg/swap
+swapon /dev/vg/swap
+mount /dev/vg/root /mnt
+```
+</details>
 ***
 ### 2) Method with LVM 
 ```sh
-pvcreate /dev/sda2
-vgcreate vg /dev/sda2
+pvcreate /dev/sda3
+vgcreate vg /dev/sda3
 lvcreate -n root -l +100%FREE vg
-mkfs.ext4 /dev/sda2
+mkfs.ext4 /dev/sda3
 mkswap /dev/sda1
 swapon /dev/sda1
 mount /dev/vg/root /mnt
