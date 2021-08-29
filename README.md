@@ -3,7 +3,8 @@
 
 # Full installation guide (UEFI)
 <details>
-	<summary>Method with full disk encryption</summary>
+	<summary>Method with full disk encryption</summary> 
+
 ##### Check internet connection and update clock
 ```sh
 ping 8.8.8.8
