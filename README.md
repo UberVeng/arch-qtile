@@ -1,7 +1,7 @@
 # Arch-qtile
 <img src="https://i.imgur.com/otd883Q.png">
 
-# Full installation guide (UEFI)
+## Full installation guide (UEFI)
 <details>
 	<summary>Method with full disk encryption</summary> 
 
@@ -52,7 +52,6 @@ fdisk /dev/sda
 mkfs.fat -F32 /dev/sda1
 mkfs.ext2 /dev/sda2
 ```
-
 ### Encryption (skip this step if you don't need to encrypt your disk)
 ##### Parameters defind by user:
 ```crypt_disk``` - name for encrypted disk
@@ -80,8 +79,25 @@ mkfs.ext4 /dev/vg/root
 mkswap /dev/vg/swap
 swapon /dev/vg/swap
 mount /dev/vg/root /mnt
+mkdir -p /mnt/boot
+mount /dev/sda2 /mnt/boot
+mkdir -p /mnt/boot/EFI
+mount /dev/sda1 /mnt/boot/EFI
+```
+##### download some basic stuff
+```sh
+pacstrap -i /mnt base linux linux-firmware git vim lvm2 base-devel efibootmgr dosfstools os-prober
+```
+##### Fstab
+```sh
+genfstab -U /mnt >> /mnt/etc/fstab
+```
+##### Chroot
+```sh
+arch-chroot /mnt
 ```
 </details>
+
 ***
 ### 2) Method with LVM 
 ```sh
@@ -110,7 +126,7 @@ mount /dev/sda2 /mnt
 ```
 ***
 ### Proceed after you setted up file system using one of 3 methods
-##### Download some basic stuff
+##### download some basic stuff
 ```sh
 pacstrap /mnt base linux linux-firmware git vim lvm2
 ```
